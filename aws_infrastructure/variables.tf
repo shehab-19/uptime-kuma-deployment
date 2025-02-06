@@ -50,5 +50,5 @@ variable "security_group1" {
 }
 
 variable "my_public_IP" {
-  default = "41.34.168.46/32"
+  default = "0.0.0.0/0" # put you public IP for security
 }
