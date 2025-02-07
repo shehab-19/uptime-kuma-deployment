@@ -1,58 +1,48 @@
 pipeline {
     agent any
-    stages {
-        stage('Deployment') {
-            steps {
-                script{
-                    // First SSH Publisher step
-                    sshPublisher(publishers: [
-                        sshPublisherDesc(
-                            configName: 'ubuntu_server', 
-                            transfers: [
-                                sshTransfer(
-                                    cleanRemote: false, 
-                                    excludes: '',  
-                                    execTimeout: 120000, 
-                                    flatten: false, 
-                                    makeEmptyDirs: false, 
-                                    noDefaultExcludes: false, 
-                                    patternSeparator: '[, ]+', 
-                                    remoteDirectory: '', 
-                                    remoteDirectorySDF: false, 
-                                    removePrefix: '',
-                                    sourceFiles: '',
-                                    execCommand: 'docker-compose down && rm docker-compose.yaml'
-                                )
-                            ],
-                            usePromotionTimestamp: false,
-                            verbose: true
-                        )
-                    ])
 
-                    sshPublisher(publishers: [
-                        sshPublisherDesc(
-                            configName: 'ubuntu_server', 
-                            transfers: [
-                                sshTransfer(
-                                    cleanRemote: false, 
-                                    excludes: '',  
-                                    execTimeout: 120000, 
-                                    flatten: false, 
-                                    makeEmptyDirs: false, 
-                                    noDefaultExcludes: false, 
-                                    patternSeparator: '[, ]+', 
-                                    remoteDirectory: '', 
-                                    remoteDirectorySDF: false, 
-                                    removePrefix: '',
-                                    execCommand: 'docker-compose up -d',
-                                    sourceFiles: 'docker-compose.yaml'
-                                )
-                            ],
-                            usePromotionTimestamp: false,
-                            verbose: true
-                        )
-                    ])
-                }    
+    environment {
+        SSH_SERVER = 'ubuntu_server'  // Use Jenkins configured SSH Server (No public IP in pipeline)
+    }
+
+    stages {
+        stage('Install Docker on EC2') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
+                    sh '''
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$(JENKINS_SERVER_HOST) <<EOF
+                       
+                        if which docker > /dev/null 2>&1 && which docker-compose > /dev/null 2>&1; then 
+                            echo "Both docker and docker-compose are installed"
+                        else
+                            echo "Installing Docker and Docker Compose"
+                            sudo apt-get update
+                            sudo apt-get install -y docker.io docker-compose
+                            sudo systemctl start docker
+                            sudo systemctl enable docker
+                        fi
+
+                        EOF
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy Docker Containers') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
+                    sh ''' 
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$(JENKINS_SERVER_HOST) <<EOF
+                        rm -f docker-compose.yaml
+                        EOF
+                        scp -i $SSH_KEY -o StrictHostKeyChecking=no docker-compose.yaml ubuntu@$(JENKINS_SERVER_HOST):/home/ubuntu/
+                        
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$(JENKINS_SERVER_HOST) <<EOF
+                        docker-compose down
+                        docker-compose up -d
+                        EOF
+                    '''
+                }
             }
         }
     }
