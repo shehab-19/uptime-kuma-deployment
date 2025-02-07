@@ -30,19 +30,30 @@ pipeline {
             }
         }
 
+
+        stage('copy docker-compose.yaml to EC2') {
+            steps {
+                script {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
+                        sh '''
+                        scp -i $SSH_KEY -o StrictHostKeyChecking=no docker-compose.yaml ubuntu@$JENKINS_SERVER_HOST:/home/ubuntu/
+                        '''
+                    }
+                }
+            }
+        }
+
+
         stage('Deploy Docker Containers') {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
                         sh '''
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST << 'EOF'
-                        rm -f docker-compose.yaml
-                        EOF
-
-                        scp -i $SSH_KEY -o StrictHostKeyChecking=no docker-compose.yaml ubuntu@$JENKINS_SERVER_HOST:/home/ubuntu/
-
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST << 'EOF'
-                        docker-compose down
+                        if [ -f "docker-compose.yaml" ]; then
+                            docker-compose down
+                            rm docker-compose.yaml
+                        fi
                         docker-compose up -d
                         EOF
                         '''
