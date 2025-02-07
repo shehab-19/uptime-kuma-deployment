@@ -5,7 +5,7 @@ pipeline {
         JENKINS_SERVER_HOST = '54.198.141.234'
     }
 
-    // stages {
+    stages {
     //     stage('Install Docker on EC2') {
     //         steps {
     //             script {
@@ -60,4 +60,4 @@ pipeline {
             }
         }
     }
-
+}
