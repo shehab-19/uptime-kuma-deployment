@@ -14,6 +14,7 @@ pipeline {
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST "(
                             if which docker > /dev/null 2>&1 && which docker-compose > /dev/null 2>&1; then
                                 echo 'Both Docker and Docker Compose are installed'
+                                rm docker-compose.yaml
                             else
                                 echo 'Installing Docker and Docker Compose' &&
                                 sudo apt-get update &&
@@ -51,10 +52,12 @@ pipeline {
                         chmod 600 $SSH_KEY
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST "(
                             ls -l &&
-                            if [ -f 'docker-compose.yaml' ]; then
-                                docker-compose down &&
-                                rm docker-compose.yaml
-                            fi &&
+                            if docker ps --filter "name=uptime-kuma" --format '{{.Names}}' | grep -q "uptime-kuma"; then
+                                echo "Uptime Kuma is running, stopping it..."
+                                docker-compose down
+                            else
+                                echo "Uptime Kuma is not running."
+                            fi 
                             docker-compose up -d
                         )"
                         """
