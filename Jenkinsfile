@@ -50,10 +50,10 @@ pipeline {
                         chmod 600 $SSH_KEY
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST <<EOF
                         ls -l
-                        // if [ -f "docker-compose.yaml" ]; then
-                        //     docker-compose down
-                        //     rm docker-compose.yaml
-                        // fi
+                         if [ -f "docker-compose.yaml" ]; then
+                             docker-compose down
+                             rm docker-compose.yaml
+                         fi
                         docker-compose up -d
                         EOF
                         '''
