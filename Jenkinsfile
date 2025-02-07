@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
-                        sh '''
+                        sh """
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST <<EOF
                         if which docker > /dev/null 2>&1 && which docker-compose > /dev/null 2>&1; then 
                             echo "Both Docker and Docker Compose are installed"
@@ -22,7 +22,7 @@ pipeline {
                             sudo systemctl enable docker
                         fi                       
                         EOF
-                        '''
+                        """
                     }
                 }
             }
@@ -33,9 +33,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
-                        sh '''
+                        sh """
                         scp -i $SSH_KEY -o StrictHostKeyChecking=no docker-compose.yaml ubuntu@$JENKINS_SERVER_HOST:/home/ubuntu/
-                        '''
+                        """
                     }
                 }
             }
@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
-                        sh '''
+                        sh """
                         chmod 600 $SSH_KEY
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST <<EOF
                         ls -l
@@ -56,7 +56,7 @@ pipeline {
                          fi
                         docker-compose up -d
                         EOF
-                        '''
+                        """
                     }
                 }
             }
