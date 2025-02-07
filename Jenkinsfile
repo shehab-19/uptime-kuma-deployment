@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        JENKINS_SERVER_HOST = '3.87.78.9'
+        JENKINS_SERVER_HOST = '54.198.141.234'
     }
 
     stages {
