@@ -14,7 +14,7 @@ pipeline {
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST "(
                             if which docker > /dev/null 2>&1 && which docker-compose > /dev/null 2>&1; then
                                 echo 'Both Docker and Docker Compose are installed'
-                                rm docker-compose.yaml
+                                rm docker-compose.yaml > /dev/null 2>&1
                             else
                                 echo 'Installing Docker and Docker Compose' &&
                                 sudo apt-get update &&
