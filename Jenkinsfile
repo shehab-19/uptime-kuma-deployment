@@ -33,7 +33,7 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
                     sh ''' 
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$(JENKINS_SERVER_HOST) <<EOF
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@${JENKINS_SERVER_HOST} <<EOF
                         rm -f docker-compose.yaml
                         EOF
                         scp -i $SSH_KEY -o StrictHostKeyChecking=no docker-compose.yaml ubuntu@${JENKINS_SERVER_HOST}:/home/ubuntu/
