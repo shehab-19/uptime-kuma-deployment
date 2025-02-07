@@ -47,7 +47,9 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
                         sh '''
+                        chmod 600 $SSH_KEY
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST << 'EOF'
+                        ls -l
                         if [ -f "docker-compose.yaml" ]; then
                             docker-compose down
                             rm docker-compose.yaml
