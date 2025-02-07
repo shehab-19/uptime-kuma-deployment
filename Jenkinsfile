@@ -11,7 +11,7 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
                         sh '''
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST 
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST << 'EOF'
                         if which docker > /dev/null 2>&1 && which docker-compose > /dev/null 2>&1; then 
                             echo "Both Docker and Docker Compose are installed"
                         else
@@ -21,7 +21,7 @@ pipeline {
                             sudo systemctl start docker
                             sudo systemctl enable docker
                         fi
-                        
+                        EOF
                         '''
                     }
                 }
@@ -33,7 +33,7 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
                         sh '''
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST 
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST << 'EOF'
                         rm -f docker-compose.yaml
                         EOF
 
@@ -42,7 +42,7 @@ pipeline {
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST << 'EOF'
                         docker-compose down
                         docker-compose up -d
-                    
+                        EOF
                         '''
                     }
                 }
