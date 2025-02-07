@@ -11,7 +11,7 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
                         sh """
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST <<EOF
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST << 'EOF'
                         if which docker > /dev/null 2>&1 && which docker-compose > /dev/null 2>&1; then 
                             echo "Both Docker and Docker Compose are installed"
                         else
@@ -48,7 +48,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
                         sh """
                         chmod 600 $SSH_KEY
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST <<EOF
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST << 'EOF'
                         ls -l
                          if [ -f "docker-compose.yaml" ]; then
                              docker-compose down
