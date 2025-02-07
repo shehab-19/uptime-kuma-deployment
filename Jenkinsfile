@@ -14,8 +14,6 @@ pipeline {
                         ssh -i $SSH_KEY -o StrictHostKeyChecking=no ubuntu@$JENKINS_SERVER_HOST "(
                             if which docker > /dev/null 2>&1 && which docker-compose > /dev/null 2>&1; then
                                 echo 'Both Docker and Docker Compose are installed'
-                                sudo usermod -aG docker ubuntu
-                                newgrp docker
                             else
                                 echo 'Installing Docker and Docker Compose' &&
                                 sudo apt-get update &&
