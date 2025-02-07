@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SSH_SERVER = 'ubuntu_server'  // Use Jenkins configured SSH Server (No public IP in pipeline)
-        JENKINS_SERVER_HOST = '44.223.29.76'  // Public IP of EC2 instance
+        JENKINS_SERVER_HOST = '3.87.78.9'  // Public IP of EC2 instance
     }
 
     stages {
