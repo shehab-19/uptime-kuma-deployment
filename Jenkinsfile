@@ -31,17 +31,17 @@ pipeline {
         }
 
 
-        stage('copy docker-compose.yaml to EC2') {
-            steps {
-                script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
-                        sh '''
-                        scp -i $SSH_KEY -o StrictHostKeyChecking=no docker-compose.yaml ubuntu@$JENKINS_SERVER_HOST:/home/ubuntu/
-                        '''
-                    }
-                }
-            }
-        }
+        // stage('copy docker-compose.yaml to EC2') {
+        //     steps {
+        //         script {
+        //             withCredentials([sshUserPrivateKey(credentialsId: 'ec2_access_key', keyFileVariable: 'SSH_KEY')]) {
+        //                 sh '''
+        //                 scp -i $SSH_KEY -o StrictHostKeyChecking=no docker-compose.yaml ubuntu@$JENKINS_SERVER_HOST:/home/ubuntu/
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
 
 
         stage('Deploy Docker Containers') {
