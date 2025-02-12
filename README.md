@@ -3,6 +3,10 @@
 ## Overview
 This project automates the deployment of [Uptime Kuma](https://github.com/louislam/uptime-kuma) on AWS using Terraform, Jenkins, and Docker Compose. The deployment sets up the required AWS infrastructure, provisions an EC2 instance, installs Docker and Docker Compose, and then deploys Uptime Kuma using a Jenkins pipeline.
 
+## Output Screenshot
+![Uptime Kuma Output](images/output.jpg)
+
+
 ## Project Structure
 ```
 .
@@ -63,9 +67,6 @@ Once the pipeline completes, open a browser and visit:
 http://<EC2_PUBLIC_IP>:3001
 ```
 Replace `<EC2_PUBLIC_IP>` with the actual public IP from Terraform.
-
-## Output Screenshot
-![Uptime Kuma Output](images/output.jpg)
 
 
 ## Notes
