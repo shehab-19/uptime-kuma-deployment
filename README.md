@@ -67,8 +67,6 @@ Replace `<EC2_PUBLIC_IP>` with the actual public IP from Terraform.
 ## Output Screenshot
 ![Uptime Kuma Output](images/output.jpg)
 
-## Infrastructure Diagram
-![AWS Infrastructure](images/infra.jpg)
 
 ## Notes
 - Ensure that **port 3001** is open in the security group.
