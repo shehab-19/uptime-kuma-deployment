@@ -93,6 +93,22 @@ resource "aws_security_group" "allow_ssh_http" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+ ingress {
+    description = "Allow HTTPS access"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Open to all, or restrict to your IP
+  }
+
+   ingress {
+    description = "Allow HTTP access to web app"
+    from_port   = 3001
+    to_port     = 3001
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Open to all, or restrict to your IP
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
