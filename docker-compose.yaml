@@ -8,3 +8,4 @@ services:
       # <Host Port>:<Container Port>
       - 3001:3001
     restart: unless-stopped
+
