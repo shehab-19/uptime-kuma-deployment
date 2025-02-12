@@ -7,6 +7,7 @@ This project automates the deployment of [Uptime Kuma](https://github.com/louisl
 ![Uptime Kuma Output](images/output.jpg)
 
 
+
 ## Project Structure
 ```
 .
